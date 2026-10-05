@@ -15,3 +15,6 @@ target/
 Thumbs.db
 *.tmp
 *.log
+
+data/
+mvn-output.txt
