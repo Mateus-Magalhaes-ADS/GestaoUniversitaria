@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Painel do Atendimento</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+	<nav class="navbar navbar-dark bg-dark">
+		<div class="container">
+			<span class="navbar-brand">Atendimento Acadêmico</span>
+			<form th:action="@{/logout}" method="post">
+				<button type="submit" class="btn btn-outline-light btn-sm">Sair</button>
+			</form>
+		</div>
+	</nav>
+	<main class="container my-5">
+		<h1 class="h3">Solicitações de matrícula</h1>
+		<p class="text-muted">Atendente: <span th:text="${usuario}"></span> · <span th:text="${emailUsuario}"></span></p>
+		<div th:replace="~{dashboards/fragmentos/matriculas :: lista('Matrículas recebidas', ${matriculas})}"></div>
+	</main>
+</body>
+</html>

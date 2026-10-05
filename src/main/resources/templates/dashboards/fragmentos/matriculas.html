@@ -1,0 +1,33 @@
+<section th:fragment="lista(titulo, matriculas)" class="mt-5">
+    <h3 class="h4 mb-3" th:text="${titulo}">Matrículas</h3>
+    <p th:if="${#lists.isEmpty(matriculas)}" class="text-muted">Nenhuma matrícula encontrada.</p>
+    <div th:unless="${#lists.isEmpty(matriculas)}" class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Aluno</th>
+                    <th>E-mail</th>
+                    <th>CPF</th>
+                    <th>Endereço</th>
+                    <th>CEP</th>
+                    <th>Curso</th>
+                    <th>Documentos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="matricula : ${matriculas}">
+                    <td th:text="${matricula.nomeCompleto}"></td>
+                    <td th:text="${matricula.email}"></td>
+                    <td th:text="${matricula.cpf}"></td>
+                    <td th:text="${matricula.endereco}"></td>
+                    <td th:text="${matricula.cep}"></td>
+                    <td th:text="${matricula.cursoId}"></td>
+                    <td class="text-nowrap">
+                        <a th:href="@{/matricula/{id}/documento/identidade(id=${matricula.id})}" class="btn btn-sm btn-outline-primary">Identidade</a>
+                        <a th:href="@{/matricula/{id}/documento/historico(id=${matricula.id})}" class="btn btn-sm btn-outline-primary">Histórico</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>

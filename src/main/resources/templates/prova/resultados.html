@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Resultados</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container">
+            <span class="navbar-brand">Portal do Aluno</span>
+            <a th:href="@{/aluno/dashboard}" class="btn btn-outline-light btn-sm">Voltar ao painel</a>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <h2 class="mb-4">Meus resultados publicados</h2>
+
+        <p th:if="${#lists.isEmpty(respostas)}" class="text-muted">Nenhum resultado publicado ainda.</p>
+
+        <div th:unless="${#lists.isEmpty(respostas)}" class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Prova</th>
+                        <th>Disciplina</th>
+                        <th>Nota final</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="resposta : ${respostas}"
+                        th:with="prova=${provas.get(resposta.provaId)}">
+                        <td th:text="${prova != null ? prova.titulo : '—'}"></td>
+                        <td th:text="${prova != null ? prova.disciplina : '—'}"></td>
+                        <td th:text="${resposta.notaFinal}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

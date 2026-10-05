@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${tituloPage}">Faculdade</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary-dark: #2c4a52;
+            --primary-banner: linear-gradient(135deg, #3d6873 0%, #4f8087 50%, #87a896 100%);
+            --accent-green: #68a38a;
+            --light-card-bg: #e2ece9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        /* Top Navbar */
+        .top-header {
+            background-color: #ffffff;
+            padding: 15px 0;
+        }
+        
+        .brand-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-outline-custom {
+            border: 2px solid var(--primary-dark);
+            color: var(--primary-dark);
+            border-radius: 20px;
+            padding: 6px 20px;
+            font-weight: 600;
+        }
+
+        .btn-outline-custom:hover {
+            background-color: var(--primary-dark);
+            color: #fff;
+        }
+
+        .btn-solid-custom {
+            background-color: var(--primary-dark);
+            color: #fff;
+            border-radius: 20px;
+            padding: 6px 24px;
+            font-weight: 600;
+        }
+
+        /* Nav Menu Bar */
+        .main-nav {
+            background-color: var(--primary-dark);
+        }
+
+        .main-nav .nav-link {
+            color: #ffffff;
+            font-weight: 600;
+            padding: 12px 25px !important;
+            letter-spacing: 1px;
+        }
+
+        .main-nav .nav-link:hover {
+            color: #a8d5c2;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background: var(--primary-banner);
+            color: white;
+            padding: 50px 0;
+            position: relative;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .hero-btn {
+            background-color: var(--accent-green);
+            color: white;
+            border-radius: 15px;
+            padding: 10px 30px;
+            border: none;
+            font-weight: 600;
+        }
+
+        .carousel-indicators-custom {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+        }
+
+        .carousel-dot.active {
+            background-color: #ffffff;
+        }
+
+        /* Feature Cards */
+        .feature-card {
+            background-color: var(--light-card-bg);
+            border: none;
+            border-radius: 15px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 230px;
+        }
+
+        .feature-carousel-track {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            scroll-behavior: smooth;
+            padding: 4px 2px 12px;
+        }
+
+        .feature-carousel-track::-webkit-scrollbar {
+            display: none;
+        }
+
+        .feature-carousel-item {
+            flex: 0 0 calc((100% - 2rem) / 3);
+            scroll-snap-align: start;
+        }
+
+        .feature-carousel-controls .btn {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 767.98px) {
+            .feature-carousel-item {
+                flex-basis: calc((100% - 1rem) / 2);
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .feature-carousel-item {
+                flex-basis: 85%;
+            }
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+        }
+
+        .placeholder-line {
+            height: 8px;
+            background-color: #c0d4ce;
+            border-radius: 4px;
+            margin: 8px auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Principal -->
+    <header class="top-header">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="brand-logo">
+                <i class="bi bi-mortarboard-fill"></i>
+                <span>Faculdade</span>
+            </div>
+            <div class="d-flex gap-2">
+                <a th:href="@{/registrar}" class="btn btn-outline-custom text-uppercase">Registrar</a>
+                <a th:href="@{/login}" class="btn btn-solid-custom text-uppercase">Logar</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Barra de Navegação -->
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav justify-content-center">
+                <li class="nav-item"><a class="nav-link" th:href="@{/}">HOME</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">CURSOS</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">PROVAS</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">NOTAS</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">CONTATO</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Banner Principal (Hero) -->
+    <section class="hero-banner">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-7">
+                    <h2 class="fw-bold mb-3">Transforme seu futuro com nossos cursos de graduação</h2>
+                    <p class="mb-4">Acesse a plataforma de gestão acadêmica para gerenciar suas matérias, matrículas e muito mais.</p>
+                    <button class="btn hero-btn">Saiba Mais</button>
+                    
+                    <div class="carousel-indicators-custom">
+                        <span class="carousel-dot active"></span>
+                        <span class="carousel-dot"></span>
+                        <span class="carousel-dot"></span>
+                    </div>
+                </div>
+                <div class="col-md-5 text-center">
+                    <img src="https://cdni.iconscout.com/illustration/premium/thumb/woman-working-on-laptop-illustration-download-in-svg-png-gif-file-formats--girl-computer-female-work-freelancer-pack-network-communication-illustrations-4545089.png" 
+                         alt="Estudante no Notebook" class="img-fluid" style="max-height: 220px;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Carrossel de serviços -->
+    <section class="container my-5" aria-label="Serviços acadêmicos">
+        <div class="feature-carousel-controls d-flex justify-content-end gap-2 mb-3">
+            <button id="feature-previous" class="btn btn-outline-custom" type="button"
+                    aria-label="Cards anteriores" aria-controls="feature-carousel-track" disabled>
+                <i class="bi bi-arrow-left" aria-hidden="true"></i>
+            </button>
+            <button id="feature-next" class="btn btn-outline-custom" type="button"
+                    aria-label="Próximos cards" aria-controls="feature-carousel-track">
+                <i class="bi bi-arrow-right" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div id="feature-carousel-track" class="feature-carousel-track">
+            <article class="feature-carousel-item feature-card">
+                <div>
+                    <i class="bi bi-file-earmark-text feature-icon" aria-hidden="true"></i>
+                    <h5 class="fw-bold text-dark mt-2">Matrícula</h5>
+                    <p class="text-muted small">Faça sua solicitação de matrícula.</p>
+                </div>
+                <a th:href="@{/matricula}" class="btn btn-solid-custom mt-3 w-100">Realizar Matrícula</a>
+            </article>
+            <article class="feature-carousel-item feature-card">
+                <div>
+                    <i class="bi bi-journal-bookmark feature-icon" aria-hidden="true"></i>
+                    <h5 class="fw-bold text-dark mt-2">Cursos</h5>
+                    <p class="text-muted small">Conheça os cursos oferecidos.</p>
+                </div>
+            </article>
+            <article class="feature-carousel-item feature-card">
+                <div>
+                    <i class="bi bi-briefcase feature-icon" aria-hidden="true"></i>
+                    <h5 class="fw-bold text-dark mt-2">Estágios</h5>
+                    <p class="text-muted small">Confira oportunidades de estágio.</p>
+                </div>
+            </article>
+            <article class="feature-carousel-item feature-card">
+                <div>
+                    <i class="bi bi-newspaper feature-icon" aria-hidden="true"></i>
+                    <h5 class="fw-bold text-dark mt-2">Notícias</h5>
+                    <p class="text-muted small">Acompanhe as novidades da faculdade.</p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const featureTrack = document.getElementById('feature-carousel-track');
+        const previousButton = document.getElementById('feature-previous');
+        const nextButton = document.getElementById('feature-next');
+
+        function updateFeatureControls() {
+            previousButton.disabled = featureTrack.scrollLeft <= 0;
+            nextButton.disabled = featureTrack.scrollLeft + featureTrack.clientWidth >= featureTrack.scrollWidth - 1;
+        }
+
+        function scrollFeatureCards(direction) {
+            const firstCard = featureTrack.querySelector('.feature-carousel-item');
+            const gap = parseFloat(getComputedStyle(featureTrack).gap);
+            featureTrack.scrollBy({
+                left: direction * (firstCard.getBoundingClientRect().width + gap),
+                behavior: 'smooth'
+            });
+        }
+
+        previousButton.addEventListener('click', () => scrollFeatureCards(-1));
+        nextButton.addEventListener('click', () => scrollFeatureCards(1));
+        featureTrack.addEventListener('scroll', updateFeatureControls);
+        window.addEventListener('resize', updateFeatureControls);
+        updateFeatureControls();
+    </script>
+</body>
+</html>

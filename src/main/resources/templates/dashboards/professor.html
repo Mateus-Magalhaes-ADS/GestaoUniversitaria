@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel do Professor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-dark bg-success">
+        <div class="container">
+            <span class="navbar-brand">Portal do Docente</span>
+            <form th:action="@{/logout}" method="post" class="d-flex">
+                <button type="submit" class="btn btn-outline-light btn-sm">Sair</button>
+            </form>
+        </div>
+    </nav>
+    <div class="container my-5">
+        <h2>Bem-vindo, Professor <span th:text="${usuario}"></span>!</h2>
+        <div class="row mt-4 g-3">
+            <div class="col-md-6"><div class="card p-3 shadow-sm"><h5>Lançar Notas e Faltas</h5></div></div>
+            <div class="col-md-6"><div class="card p-3 shadow-sm"><h5>Minhas Turmas</h5></div></div>
+        </div>
+        <div class="mt-4 d-flex gap-2">
+            <a th:href="@{/prova/nova}" class="btn btn-success">Criar prova</a>
+            <a th:href="@{/prova/professor}" class="btn btn-outline-success">Minhas provas</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,6 @@
+/data/
+/uploads/
+/target/
+.env
+*.env
+/mvn-output.txt

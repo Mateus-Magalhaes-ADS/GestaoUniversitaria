@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal do Aluno</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --portal-ink: #193b43;
+            --portal-green: #2d725f;
+            --portal-green-soft: #e5f1ec;
+            --portal-coral: #c76b4d;
+            --portal-paper: #f4f7f5;
+            --portal-line: #dce5e0;
+        }
+
+        body {
+            min-height: 100vh;
+            color: var(--portal-ink);
+            background: var(--portal-paper);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .portal-header {
+            min-height: 72px;
+            background: #fff;
+            border-bottom: 1px solid var(--portal-line);
+        }
+
+        .portal-brand {
+            color: var(--portal-ink);
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .portal-layout {
+            display: grid;
+            grid-template-columns: 250px minmax(0, 1fr);
+            min-height: calc(100vh - 72px);
+        }
+
+        .portal-sidebar {
+            padding: 28px 16px;
+            background: #fff;
+            border-right: 1px solid var(--portal-line);
+        }
+
+        .sidebar-label {
+            margin: 0 12px 12px;
+            color: #71827d;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .portal-menu {
+            display: grid;
+            gap: 5px;
+        }
+
+        .portal-menu button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            min-height: 44px;
+            padding: 10px 12px;
+            color: #405c5c;
+            text-align: left;
+            background: transparent;
+            border: 0;
+            border-radius: 6px;
+        }
+
+        .portal-menu button:hover {
+            background: #f1f6f3;
+        }
+
+        .portal-menu button[aria-current="page"] {
+            color: var(--portal-green);
+            font-weight: 700;
+            background: var(--portal-green-soft);
+        }
+
+        .portal-menu i {
+            width: 20px;
+            font-size: 1.05rem;
+            text-align: center;
+        }
+
+        .portal-content {
+            width: min(100%, 1120px);
+            padding: clamp(24px, 4vw, 48px);
+        }
+
+        .welcome-kicker {
+            margin-bottom: 8px;
+            color: var(--portal-coral);
+            font-size: .76rem;
+            font-weight: 700;
+            letter-spacing: .09em;
+            text-transform: uppercase;
+        }
+
+        .welcome-title {
+            margin-bottom: 8px;
+            font-size: clamp(1.5rem, 2vw, 2rem);
+            font-weight: 700;
+        }
+
+        .welcome-email {
+            color: #637874;
+        }
+
+        .portal-section {
+            margin-top: 32px;
+            padding-top: 26px;
+            border-top: 1px solid var(--portal-line);
+        }
+
+        .portal-section[hidden] {
+            display: none !important;
+        }
+
+        .portal-section h2 {
+            margin-bottom: 18px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .data-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px 28px;
+            max-width: 680px;
+        }
+
+        .data-item dt {
+            margin-bottom: 4px;
+            color: #6d817b;
+            font-size: .8rem;
+            font-weight: 600;
+        }
+
+        .data-item dd {
+            margin: 0;
+            overflow-wrap: anywhere;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            max-width: 640px;
+            padding: 20px 0;
+            color: #61746f;
+        }
+
+        .action-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .action-links .btn {
+            border-radius: 5px;
+        }
+
+        .btn-portal-primary {
+            color: #fff;
+            background: var(--portal-green);
+            border-color: var(--portal-green);
+        }
+
+        .btn-portal-primary:hover {
+            color: #fff;
+            background: #235d4d;
+        }
+
+        @media (max-width: 767.98px) {
+            .portal-layout {
+                grid-template-columns: minmax(0, 1fr);
+                align-content: start;
+            }
+
+            .portal-sidebar {
+                padding: 12px 16px;
+                border-right: 0;
+                border-bottom: 1px solid var(--portal-line);
+            }
+
+            .sidebar-label {
+                margin-bottom: 8px;
+            }
+
+            .portal-menu {
+                display: flex;
+                gap: 6px;
+                overflow-x: auto;
+                padding-bottom: 4px;
+            }
+
+            .portal-menu button {
+                flex: 0 0 auto;
+                width: auto;
+                min-height: 40px;
+                white-space: nowrap;
+            }
+
+            .portal-content {
+                padding: 24px 20px 36px;
+            }
+
+            .data-list {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="portal-header">
+        <div class="container-fluid px-4 d-flex align-items-center justify-content-between" style="min-height: 72px;">
+            <a th:href="@{/aluno/dashboard}" class="portal-brand">
+                <i class="bi bi-mortarboard-fill me-2" aria-hidden="true"></i>Portal do Aluno
+            </a>
+            <form th:action="@{/logout}" method="post" class="mb-0">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-box-arrow-right me-1" aria-hidden="true"></i>Sair
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <div class="portal-layout">
+        <aside class="portal-sidebar" aria-label="Navegação do aluno">
+            <p class="sidebar-label">Área do aluno</p>
+            <nav class="portal-menu" aria-label="Menu principal">
+                <button type="button" data-section="dados-cadastrais" aria-current="page">
+                    <i class="bi bi-person-vcard" aria-hidden="true"></i>Dados cadastrais
+                </button>
+                <button type="button" data-section="salas-aula">
+                    <i class="bi bi-door-open" aria-hidden="true"></i>Salas de aula
+                </button>
+                <button type="button" data-section="notas">
+                    <i class="bi bi-journal-check" aria-hidden="true"></i>Notas
+                </button>
+                <button type="button" data-section="provas">
+                    <i class="bi bi-file-earmark-text" aria-hidden="true"></i>Provas
+                </button>
+                <button type="button" data-section="financeiro">
+                    <i class="bi bi-credit-card" aria-hidden="true"></i>Financeiro
+                </button>
+                <button type="button" data-section="estagios">
+                    <i class="bi bi-briefcase" aria-hidden="true"></i>Estágios
+                </button>
+                <button type="button" data-section="contato">
+                    <i class="bi bi-chat-dots" aria-hidden="true"></i>Fale conosco
+                </button>
+            </nav>
+        </aside>
+
+        <main class="portal-content">
+            <p class="welcome-kicker">Gestão acadêmica</p>
+            <h1 class="welcome-title">Olá, <span th:text="${usuario}">Aluno</span></h1>
+            <p class="welcome-email" th:text="${emailUsuario}"></p>
+
+            <section id="dados-cadastrais" class="portal-section" aria-labelledby="titulo-dados-cadastrais">
+                <h2 id="titulo-dados-cadastrais">Dados cadastrais</h2>
+                <dl class="data-list">
+                    <div class="data-item">
+                        <dt>Nome</dt>
+                        <dd th:text="${usuario}"></dd>
+                    </div>
+                    <div class="data-item">
+                        <dt>E-mail</dt>
+                        <dd th:text="${emailUsuario}"></dd>
+                    </div>
+                </dl>
+                <div th:replace="~{dashboards/fragmentos/matriculas :: lista('Minhas matrículas', ${matriculas})}"></div>
+                <div class="action-links">
+                    <a th:href="@{/matricula}" class="btn btn-portal-primary">Nova solicitação de matrícula</a>
+                </div>
+            </section>
+
+            <section id="salas-aula" class="portal-section" aria-labelledby="titulo-salas-aula" hidden>
+                <h2 id="titulo-salas-aula">Salas de aula</h2>
+                <p class="empty-state">As salas e turmas serão exibidas aqui quando estiverem disponíveis para sua conta.</p>
+            </section>
+
+            <section id="notas" class="portal-section" aria-labelledby="titulo-notas" hidden>
+                <h2 id="titulo-notas">Notas</h2>
+                <p class="empty-state">Consulte suas provas disponíveis e os resultados liberados pela coordenação.</p>
+                <div class="action-links">
+                    <a th:href="@{/prova/disponiveis}" class="btn btn-portal-primary">Provas disponíveis</a>
+                    <a th:href="@{/prova/resultados}" class="btn btn-outline-secondary">Resultados publicados</a>
+                </div>
+            </section>
+
+            <section id="provas" class="portal-section" aria-labelledby="titulo-provas" hidden>
+                <h2 id="titulo-provas">Provas</h2>
+                <p class="empty-state">Acesse as avaliações abertas para responder. Cada prova tem seis questões de múltipla escolha e uma dissertativa.</p>
+                <div class="action-links">
+                    <a th:href="@{/prova/disponiveis}" class="btn btn-portal-primary">Ver provas disponíveis</a>
+                </div>
+            </section>
+
+            <section id="financeiro" class="portal-section" aria-labelledby="titulo-financeiro" hidden>
+                <h2 id="titulo-financeiro">Financeiro</h2>
+                <p class="empty-state">Não há informações financeiras disponíveis para exibição no momento.</p>
+            </section>
+
+            <section id="estagios" class="portal-section" aria-labelledby="titulo-estagios" hidden>
+                <h2 id="titulo-estagios">Estágios</h2>
+                <p class="empty-state">As oportunidades de estágio serão exibidas aqui quando forem cadastradas.</p>
+            </section>
+
+            <section id="contato" class="portal-section" aria-labelledby="titulo-contato" hidden>
+                <h2 id="titulo-contato">Fale conosco</h2>
+                <p class="empty-state">Os canais de atendimento da universidade serão exibidos aqui.</p>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const menuButtons = document.querySelectorAll('.portal-menu button');
+        const sections = document.querySelectorAll('.portal-section');
+
+        menuButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const activeSection = button.dataset.section;
+                sections.forEach((section) => {
+                    section.hidden = section.id !== activeSection;
+                });
+                menuButtons.forEach((menuButton) => {
+                    if (menuButton === button) {
+                        menuButton.setAttribute('aria-current', 'page');
+                    } else {
+                        menuButton.removeAttribute('aria-current');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
