@@ -1,6 +1,17 @@
-/data/
-/uploads/
-/target/
-.env
-*.env
-/mvn-output.txt
+# Pastas de compilação e binários
+bin/
+build/
+target/
+*.class
+
+# Arquivos de IDEs
+.settings/
+.classpath
+.project
+.idea/
+*.iml
+
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
