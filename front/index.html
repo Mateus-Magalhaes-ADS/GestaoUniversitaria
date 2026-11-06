@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UniConecta</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">UniConecta</a>
+    <button id="login-button" class="button secondary" type="button">Entrar com OAuth2</button>
+  </header>
+  <main>
+    <section class="hero">
+      <p class="eyebrow">Gestão universitária</p>
+      <h1>Conectando sua jornada acadêmica.</h1>
+      <p>Acesse suas solicitações de matrícula e atividades acadêmicas.</p>
+      <p id="notice" class="notice" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="register-section" class="card">
+      <h2>Criar conta de aluno</h2>
+      <form id="register-form" class="form-grid">
+        <label>Nome completo<input name="name" autocomplete="name" required></label>
+        <label>E-mail<input name="email" type="email" autocomplete="email" required></label>
+        <label>Senha<input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+        <button class="button" type="submit">Cadastrar</button>
+      </form>
+    </section>
+
+    <section id="dashboard" class="card" hidden>
+      <div class="section-heading">
+        <div><p class="eyebrow">Área autenticada</p><h2 id="welcome">Painel</h2></div>
+        <button id="logout-button" class="button secondary" type="button">Sair</button>
+      </div>
+      <div id="matriculas-section">
+        <h3>Solicitações de matrícula</h3>
+        <ul id="matriculas-list" class="data-list"></ul>
+        <form id="matricula-form" class="form-grid" enctype="multipart/form-data">
+          <label>CPF<input name="cpf" inputmode="numeric" required></label>
+          <label>Endereço<input name="endereco" required></label>
+          <label>CEP<input name="cep" required></label>
+          <label>ID do curso<input name="cursoId" type="number" min="1" required></label>
+          <label>Documento de identidade<input name="documentoIdentidade" type="file" accept=".pdf,.png,.jpg,.jpeg" required></label>
+          <label>Histórico escolar<input name="historicoEscolar" type="file" accept=".pdf,.png,.jpg,.jpeg" required></label>
+          <button class="button" type="submit">Enviar solicitação</button>
+        </form>
+      </div>
+      <div id="provas-section">
+        <h3>Provas</h3>
+        <ul id="provas-list" class="data-list"></ul>
+        <div id="prova-form-container"></div>
+      </div>
+    </section>
+  </main>
+  <footer>UniConecta · Projeto acadêmico</footer>
+</body>
+</html>

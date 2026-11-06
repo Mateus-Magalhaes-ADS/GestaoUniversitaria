@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: uniconecta
+      POSTGRES_USER: uniconecta
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?Defina DATABASE_PASSWORD no ambiente}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U uniconecta -d uniconecta"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      PORT: 8080
+      DATABASE_URL: jdbc:postgresql://db:5432/uniconecta
+      DATABASE_USERNAME: uniconecta
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:?Defina DATABASE_PASSWORD no ambiente}
+      FRONTEND_ORIGIN: http://localhost:5500
+      APP_BOOTSTRAP_STAFF_EMAIL: ${APP_BOOTSTRAP_STAFF_EMAIL:-}
+      APP_BOOTSTRAP_STAFF_PASSWORD: ${APP_BOOTSTRAP_STAFF_PASSWORD:-}
+      APP_BOOTSTRAP_STAFF_NAME: ${APP_BOOTSTRAP_STAFF_NAME:-Equipe}
+      APP_BOOTSTRAP_STAFF_ROLE: ${APP_BOOTSTRAP_STAFF_ROLE:-}
+      APP_PROFESSOR_REGISTRATION_CODE: ${APP_PROFESSOR_REGISTRATION_CODE:-}
+      APP_COORDINATOR_REGISTRATION_CODE: ${APP_COORDINATOR_REGISTRATION_CODE:-}
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres-data:

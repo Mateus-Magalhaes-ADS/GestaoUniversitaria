@@ -18,3 +18,5 @@ Thumbs.db
 
 data/
 mvn-output.txt
+.env
+backend/target/

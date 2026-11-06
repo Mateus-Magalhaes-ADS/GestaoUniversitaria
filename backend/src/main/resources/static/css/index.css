@@ -1,0 +1,161 @@
+:root {
+    --primary-dark: #2c4a52;
+    --primary-banner: linear-gradient(135deg, #3d6873 0%, #4f8087 50%, #87a896 100%);
+    --accent-green: #68a38a;
+    --light-card-bg: #e2ece9;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Top Navbar */
+.top-header {
+    background-color: #ffffff;
+    padding: 15px 0;
+}
+
+.btn-outline-custom {
+    border: 2px solid var(--primary-dark);
+    color: var(--primary-dark);
+    border-radius: 20px;
+    padding: 6px 20px;
+    font-weight: 600;
+}
+
+.btn-outline-custom:hover {
+    background-color: var(--primary-dark);
+    color: #fff;
+}
+
+.btn-solid-custom {
+    background-color: var(--primary-dark);
+    color: #fff;
+    border-radius: 20px;
+    padding: 6px 24px;
+    font-weight: 600;
+}
+
+/* Nav Menu Bar */
+.main-nav {
+    background-color: var(--primary-dark);
+}
+
+.main-nav .nav-link {
+    color: #ffffff;
+    font-weight: 600;
+    padding: 12px 25px !important;
+    letter-spacing: 1px;
+}
+
+.main-nav .nav-link:hover {
+    color: #a8d5c2;
+}
+
+/* Hero Banner */
+.hero-banner {
+    background: var(--primary-banner);
+    color: white;
+    padding: 50px 0;
+    position: relative;
+    border-radius: 0 0 10px 10px;
+}
+
+.hero-btn {
+    background-color: var(--accent-green);
+    color: white;
+    border-radius: 15px;
+    padding: 10px 30px;
+    border: none;
+    font-weight: 600;
+}
+
+.carousel-indicators-custom {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.carousel-dot {
+    width: 10px;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+}
+
+.carousel-dot.active {
+    background-color: #ffffff;
+}
+
+/* Feature Cards */
+.feature-card {
+    background-color: var(--light-card-bg);
+    border: none;
+    border-radius: 15px;
+    padding: 30px 20px;
+    text-align: center;
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 230px;
+}
+
+.feature-carousel-track {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    padding: 4px 2px 12px;
+}
+
+.feature-carousel-track::-webkit-scrollbar {
+    display: none;
+}
+
+.feature-carousel-item {
+    flex: 0 0 calc((100% - 2rem) / 3);
+    scroll-snap-align: start;
+}
+
+.feature-carousel-controls .btn {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 767.98px) {
+    .feature-carousel-item {
+        flex-basis: calc((100% - 1rem) / 2);
+    }
+}
+
+@media (max-width: 575.98px) {
+    .feature-carousel-item {
+        flex-basis: 85%;
+    }
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    color: var(--primary-dark);
+    margin-bottom: 15px;
+}
+
+.placeholder-line {
+    height: 8px;
+    background-color: #c0d4ce;
+    border-radius: 4px;
+    margin: 8px auto;
+}

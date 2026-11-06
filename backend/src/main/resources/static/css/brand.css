@@ -1,0 +1,31 @@
+.uniconecta-logo {
+    display: inline-flex;
+    flex: 0 1 auto;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    padding: 2px 4px;
+    overflow: hidden;
+    background-color: #fff;
+    border-radius: 4px;
+    vertical-align: middle;
+}
+
+.uniconecta-logo img {
+    display: block;
+    width: auto;
+    max-width: min(286px, 58.5vw);
+    height: 68px;
+    object-fit: contain;
+}
+
+.uniconecta-logo:hover {
+    opacity: .92;
+}
+
+@media (max-width: 575.98px) {
+    .uniconecta-logo img {
+        max-width: min(221px, 58.5vw);
+        height: 55px;
+    }
+}
