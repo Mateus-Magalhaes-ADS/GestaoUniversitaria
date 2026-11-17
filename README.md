@@ -19,9 +19,10 @@ Projeto Integrador acadêmico de TADS/TSI — SENAC EAD. O UniConecta é um MVP 
 
 ## Funcionalidades do MVP
 
-- Cadastro de alunos e autenticação OAuth 2.0 Authorization Code com PKCE.
-- Perfis de aluno, professor, coordenador e atendente.
-- Solicitações de matrícula com documentos de identidade e histórico escolar.
+- Cadastro de alunos com confirmação de senha e autenticação OAuth 2.0 Authorization Code com PKCE.
+- Perfis de aluno, professor, coordenador e administrativo (`ATENDENTE`).
+- Cadastro de professor, coordenador e administrativo protegido por códigos de convite específicos.
+- Solicitações autenticadas de matrícula com envio de documento de identidade e histórico escolar para validação.
 - Consulta de solicitações conforme o perfil: alunos veem somente as próprias; atendentes e coordenadores podem consultar todas.
 - Criação, abertura, resposta, encerramento, correção e publicação de provas.
 - Interface web separada em `front/` e backend/API em `backend/`.
@@ -85,7 +86,7 @@ Inicie um servidor PostgreSQL e crie um banco e usuário para o projeto. Configu
 $env:DATABASE_URL = "jdbc:postgresql://localhost:5432/uniconecta"
 $env:DATABASE_USERNAME = "uniconecta"
 $env:DATABASE_PASSWORD = "defina-uma-senha-local"
-$env:FRONTEND_ORIGIN = "http://localhost:5500"
+$env:FRONTEND_ORIGIN = "http://localhost:5500,http://127.0.0.1:5500"
 ```
 
 Opcionalmente, crie a primeira conta de equipe antes de iniciar pela primeira vez:
@@ -105,6 +106,24 @@ mvn -f backend\pom.xml spring-boot:run
 
 Use um servidor estático para servir `front/` na porta 5500. A aplicação está configurada para permitir por padrão `http://localhost:5500`; ao usar outra origem, atualize `FRONTEND_ORIGIN`.
 
+### Acessar pelo celular na mesma rede Wi-Fi
+
+1. Descubra o IPv4 do computador na rede Wi-Fi com `ipconfig` (por exemplo, `192.168.15.14`). O celular e o computador precisam estar na mesma rede.
+2. No PowerShell, na raiz do projeto, configure o endereço do frontend e reinicie o backend:
+
+   ```powershell
+   $env:FRONTEND_ORIGIN = "http://192.168.15.14:5500"
+   $env:OAUTH_REDIRECT_URI = "http://192.168.15.14:5500/callback.html,http://192.168.15.14:5500/front/callback.html"
+   $env:OAUTH_ISSUER = "http://192.168.15.14:8080"
+   mvn -f backend\pom.xml spring-boot:run
+   ```
+
+   Substitua `192.168.15.14` pelo IPv4 encontrado. Se o backend já estiver rodando, pare-o antes de reiniciar com essas variáveis.
+3. Sirva a pasta `front/` na porta 5500 em todas as interfaces de rede. Com a extensão Live Server do VS Code, defina `"liveServer.settings.host": "0.0.0.0"` nas configurações e abra `front/index.html` com Live Server.
+4. No celular, abra `http://192.168.15.14:5500`. Se não conectar, permita o acesso do Java e do servidor da porta 5500 no Firewall do Windows para a rede privada.
+
+O frontend usa automaticamente o mesmo endereço do navegador para acessar o backend na porta 8080. Isso é destinado a testes em uma rede confiável; não exponha essas portas à internet.
+
 ## Autenticação OAuth 2.0
 
 O servidor OAuth 2.0 está em `http://localhost:8080`. O cliente público de desenvolvimento está configurado como:
@@ -115,7 +134,7 @@ O servidor OAuth 2.0 está em `http://localhost:8080`. O cliente público de des
 | Client secret | Nenhum — cliente público com PKCE |
 | Authorization URL | `http://localhost:8080/oauth2/authorize` |
 | Access token URL | `http://localhost:8080/oauth2/token` |
-| Redirect URI da interface | `http://localhost:5500/callback.html` |
+| Redirect URI da interface | `callback.html` no mesmo caminho da página (`/callback.html` ou `/front/callback.html`) |
 | Redirect URI do Postman | `https://oauth.pstmn.io/v1/callback` |
 | Grant type | Authorization Code (com PKCE) |
 | Scopes | `openid profile` |
@@ -152,7 +171,7 @@ Base URL: `http://localhost:8080`. Exceto pelo cadastro, os endpoints abaixo exi
 
 | Método | Endpoint | Acesso | Descrição |
 |---|---|---|---|
-| `POST` | `/api/auth/register` | Público | Cadastra aluno. Aceita `name`, `email`, `password`. |
+| `POST` | `/api/auth/register` | Público | Cadastra aluno ou equipe. Aceita `name`, `email`, `password`, `profile` e `inviteCode`; aluno é o perfil padrão e os demais exigem convite. |
 | `GET` | `/api/me` | Autenticado | Retorna e-mail e perfis do token. |
 
 Exemplo de cadastro:
@@ -161,9 +180,12 @@ Exemplo de cadastro:
 {
   "name": "Ana Souza",
   "email": "ana@example.com",
-  "password": "uma-senha-segura"
+  "password": "uma-senha-segura",
+  "profile": "ALUNO"
 }
 ```
+
+Os valores de `profile` são `ALUNO`, `PROFESSOR`, `COORDENADOR` e `ATENDENTE` (exibido como Administrativo). Para perfis de equipe, envie o código correspondente em `inviteCode`.
 
 ### Matrículas
 
@@ -206,8 +228,9 @@ Para criar uma prova, o JSON contém `title`, `subject` e uma lista `questions`.
 | `APP_BOOTSTRAP_STAFF_PASSWORD` | Senha para a conta inicial. |
 | `APP_BOOTSTRAP_STAFF_NAME` | Nome da conta inicial. |
 | `APP_BOOTSTRAP_STAFF_ROLE` | `ATENDENTE`, `COORDENADOR` ou `PROFESSOR`. |
-| `APP_PROFESSOR_REGISTRATION_CODE` | Convite para cadastro de professor pelo formulário MVC legado. |
-| `APP_COORDINATOR_REGISTRATION_CODE` | Convite para cadastro de coordenador pelo formulário MVC legado. |
+| `APP_PROFESSOR_REGISTRATION_CODE` | Convite para cadastro de professor. |
+| `APP_COORDINATOR_REGISTRATION_CODE` | Convite para cadastro de coordenador. |
+| `APP_ADMINISTRATIVE_REGISTRATION_CODE` | Convite para cadastro de administrativo (`ATENDENTE`). |
 
 Mantenha senhas e códigos fora do repositório. O Hibernate cria ou atualiza o esquema com `ddl-auto=update`; use migrações controladas antes de operar com dados de produção.
 

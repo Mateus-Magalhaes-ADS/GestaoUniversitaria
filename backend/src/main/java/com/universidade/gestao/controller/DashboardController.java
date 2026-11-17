@@ -37,7 +37,9 @@ public class DashboardController {
     @GetMapping("/coordenador/dashboard")
     public String dashboardCoordenador(@AuthenticationPrincipal UserDetails user, Model model) {
         adicionarUsuario(model, user);
-        model.addAttribute("matriculas", matriculaRepository.findAll());
+        var matriculas = matriculaRepository.findAll();
+        model.addAttribute("matriculas", matriculas);
+        model.addAttribute("totalMatriculas", matriculas.size());
         return "dashboards/coordenador";
     }
 

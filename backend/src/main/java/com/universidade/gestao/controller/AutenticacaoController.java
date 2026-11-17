@@ -24,16 +24,19 @@ public class AutenticacaoController {
     private final PasswordEncoder passwordEncoder;
     private final String professorRegistrationCode;
     private final String coordinatorRegistrationCode;
+    private final String administrativeRegistrationCode;
 
     public AutenticacaoController(
             UsuarioRepository usuarioRepository,
             PasswordEncoder passwordEncoder,
             @Value("${APP_PROFESSOR_REGISTRATION_CODE:}") String professorRegistrationCode,
-            @Value("${APP_COORDINATOR_REGISTRATION_CODE:}") String coordinatorRegistrationCode) {
+            @Value("${APP_COORDINATOR_REGISTRATION_CODE:}") String coordinatorRegistrationCode,
+            @Value("${APP_ADMINISTRATIVE_REGISTRATION_CODE:}") String administrativeRegistrationCode) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.professorRegistrationCode = professorRegistrationCode;
         this.coordinatorRegistrationCode = coordinatorRegistrationCode;
+        this.administrativeRegistrationCode = administrativeRegistrationCode;
     }
 
     @GetMapping("/login")
@@ -72,7 +75,7 @@ public class AutenticacaoController {
             return "redirect:/registrar?erro=perfil";
         }
 
-        if (role == Role.ATENDENTE || (role != Role.ALUNO && !conviteValido(role, codigoConvite))) {
+        if (role != Role.ALUNO && !conviteValido(role, codigoConvite)) {
             return "redirect:/registrar?erro=convite";
         }
 
@@ -91,7 +94,8 @@ public class AutenticacaoController {
         String codigoConfigurado = switch (role) {
             case PROFESSOR -> professorRegistrationCode;
             case COORDENADOR -> coordinatorRegistrationCode;
-            default -> "";
+            case ATENDENTE -> administrativeRegistrationCode;
+            case ALUNO -> "";
         };
         String codigoConfiguradoNormalizado = normalizarCodigoConvite(codigoConfigurado);
         String codigoConviteNormalizado = normalizarCodigoConvite(codigoConvite);

@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.universidade.gestao.model.Matricula;
@@ -25,7 +26,11 @@ import com.universidade.gestao.model.Usuario;
 import com.universidade.gestao.repository.MatriculaRepository;
 import com.universidade.gestao.repository.UsuarioRepository;
 
-@SpringBootTest
+@SpringBootTest(properties = {
+        "APP_PROFESSOR_REGISTRATION_CODE=invite-professor-test",
+        "APP_COORDINATOR_REGISTRATION_CODE=invite-coordinator-test",
+        "APP_ADMINISTRATIVE_REGISTRATION_CODE=invite-administrative-test"
+})
 @AutoConfigureMockMvc
 class RestApiIntegrationTest {
 
@@ -40,6 +45,22 @@ class RestApiIntegrationTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RegisteredClientRepository registeredClients;
+
+    @Test
+    void oauthClientAcceptsBothFrontendCallbackLocationsAndLoopbackHosts() {
+        var redirectUris = registeredClients.findByClientId("uniconecta-web").getRedirectUris();
+        org.junit.jupiter.api.Assertions.assertTrue(
+                redirectUris.contains("http://localhost:5500/callback.html"));
+        org.junit.jupiter.api.Assertions.assertTrue(
+                redirectUris.contains("http://127.0.0.1:5500/callback.html"));
+        org.junit.jupiter.api.Assertions.assertTrue(
+                redirectUris.contains("http://localhost:5500/front/callback.html"));
+        org.junit.jupiter.api.Assertions.assertTrue(
+                redirectUris.contains("http://127.0.0.1:5500/front/callback.html"));
+    }
 
     @Test
     void publicRegistrationCreatesAccountWithoutReturningPassword() throws Exception {
@@ -56,6 +77,34 @@ class RestApiIntegrationTest {
 
         Usuario saved = usuarios.findByEmail(email).orElseThrow();
         org.junit.jupiter.api.Assertions.assertTrue(passwordEncoder.matches("a-secure-password", saved.getSenha()));
+    }
+
+    @Test
+    void staffRegistrationRequiresTheRoleSpecificInviteCode() throws Exception {
+        String deniedEmail = "admin-denied-" + java.util.UUID.randomUUID() + "@example.com";
+        mockMvc.perform(post("/api/auth/register").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"name":"Administrative User","email":"%s","password":"a-secure-password","profile":"ATENDENTE"}
+                                """.formatted(deniedEmail)))
+                .andExpect(status().isForbidden());
+        org.junit.jupiter.api.Assertions.assertTrue(usuarios.findByEmail(deniedEmail).isEmpty());
+
+        String[][] invitedProfiles = {
+                {"PROFESSOR", "invite-professor-test"},
+                {"COORDENADOR", "invite-coordinator-test"},
+                {"ATENDENTE", "invite-administrative-test"}
+        };
+        for (String[] invitedProfile : invitedProfiles) {
+            String email = invitedProfile[0].toLowerCase() + "-" + java.util.UUID.randomUUID() + "@example.com";
+            mockMvc.perform(post("/api/auth/register").with(csrf())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("""
+                                    {"name":"Invited User","email":"%s","password":"a-secure-password","profile":"%s","inviteCode":"%s"}
+                                    """.formatted(email, invitedProfile[0], invitedProfile[1])))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.profile").value(invitedProfile[0]));
+        }
     }
 
     @Test

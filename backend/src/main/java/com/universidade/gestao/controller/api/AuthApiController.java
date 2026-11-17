@@ -29,16 +29,19 @@ public class AuthApiController {
     private final PasswordEncoder passwordEncoder;
     private final String professorCode;
     private final String coordinatorCode;
+    private final String administrativeCode;
 
     public AuthApiController(
             UsuarioRepository usuarios,
             PasswordEncoder passwordEncoder,
             @Value("${APP_PROFESSOR_REGISTRATION_CODE:}") String professorCode,
-            @Value("${APP_COORDINATOR_REGISTRATION_CODE:}") String coordinatorCode) {
+            @Value("${APP_COORDINATOR_REGISTRATION_CODE:}") String coordinatorCode,
+            @Value("${APP_ADMINISTRATIVE_REGISTRATION_CODE:}") String administrativeCode) {
         this.usuarios = usuarios;
         this.passwordEncoder = passwordEncoder;
         this.professorCode = professorCode;
         this.coordinatorCode = coordinatorCode;
+        this.administrativeCode = administrativeCode;
     }
 
     @PostMapping("/auth/register")
@@ -57,9 +60,6 @@ public class AuthApiController {
                     : Role.valueOf(request.profile().trim().toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Perfil inválido.");
-        }
-        if (role == Role.ATENDENTE) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "O perfil de atendente não pode ser criado publicamente.");
         }
         if (role != Role.ALUNO && !validInvite(role, request.inviteCode())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Código de convite inválido.");
@@ -82,7 +82,12 @@ public class AuthApiController {
     }
 
     private boolean validInvite(Role role, String suppliedCode) {
-        String configured = role == Role.PROFESSOR ? professorCode : coordinatorCode;
+        String configured = switch (role) {
+            case PROFESSOR -> professorCode;
+            case COORDENADOR -> coordinatorCode;
+            case ATENDENTE -> administrativeCode;
+            case ALUNO -> "";
+        };
         if (configured == null || configured.isBlank() || suppliedCode == null || suppliedCode.isBlank()) {
             return false;
         }

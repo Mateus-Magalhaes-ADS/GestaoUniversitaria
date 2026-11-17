@@ -157,9 +157,11 @@ public class SecurityConfig {
 
     @Bean
     CorsConfigurationSource corsConfigurationSource(
-            @Value("${app.cors.allowed-origin:http://localhost:5500}") String allowedOrigin) {
+            @Value("${app.cors.allowed-origins:http://localhost:5500,http://127.0.0.1:5500}") String allowedOrigins) {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(java.util.List.of(allowedOrigin));
+        configuration.setAllowedOrigins(java.util.Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .toList());
         configuration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(java.util.List.of("Authorization", "Content-Type", "Accept"));
         configuration.setExposedHeaders(java.util.List.of("Content-Disposition"));
@@ -170,22 +172,26 @@ public class SecurityConfig {
     }
 
     @Bean
-    RegisteredClientRepository registeredClientRepository() {
-        RegisteredClient webClient = RegisteredClient.withId(UUID.randomUUID().toString())
+    RegisteredClientRepository registeredClientRepository(
+            @Value("${app.oauth.redirect-uris:http://localhost:5500/callback.html,http://127.0.0.1:5500/callback.html,http://localhost:5500/front/callback.html,http://127.0.0.1:5500/front/callback.html}") String redirectUris) {
+        var webClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("uniconecta-web")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("http://localhost:5500/callback.html")
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN);
+        java.util.Arrays.stream(redirectUris.split(","))
+                .map(String::trim)
+                .filter(uri -> !uri.isEmpty())
+                .forEach(webClient::redirectUri);
+        webClient
                 .redirectUri("https://oauth.pstmn.io/v1/callback")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
                 .clientSettings(ClientSettings.builder()
                         .requireProofKey(true)
                         .requireAuthorizationConsent(false)
-                        .build())
-                .build();
-        return new InMemoryRegisteredClientRepository(webClient);
+                        .build());
+        return new InMemoryRegisteredClientRepository(webClient.build());
     }
 
     @Bean
@@ -205,8 +211,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    AuthorizationServerSettings authorizationServerSettings() {
-        return AuthorizationServerSettings.builder().issuer("http://localhost:8080").build();
+    AuthorizationServerSettings authorizationServerSettings(
+            @Value("${app.oauth.issuer:http://localhost:8080}") String issuer) {
+        return AuthorizationServerSettings.builder().issuer(issuer).build();
     }
 
     @Bean

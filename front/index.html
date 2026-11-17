@@ -9,7 +9,9 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="/">UniConecta</a>
+  <a class="brand" href="/">
+    <img class="brand-logo" src="assets/logouniconecta.jpeg" alt="UniConecta — Gestão Universitária Inteligente">
+  </a>
     <button id="login-button" class="button secondary" type="button">Entrar com OAuth2</button>
   </header>
   <main>
@@ -21,31 +23,100 @@
     </section>
 
     <section id="register-section" class="card">
+      <p class="eyebrow">Primeiro passo</p>
       <h2>Criar conta de aluno</h2>
+      <p class="form-intro">Preencha seus dados para acessar a área do aluno. Depois, você poderá enviar os documentos da matrícula.</p>
       <form id="register-form" class="form-grid">
-        <label>Nome completo<input name="name" autocomplete="name" required></label>
-        <label>E-mail<input name="email" type="email" autocomplete="email" required></label>
-        <label>Senha<input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
-        <button class="button" type="submit">Cadastrar</button>
+        <label for="register-name">Nome completo
+          <input id="register-name" name="name" autocomplete="name" maxlength="120" required>
+        </label>
+        <label for="register-email">E-mail
+          <input id="register-email" name="email" type="email" autocomplete="email" maxlength="254" required>
+        </label>
+        <label for="register-profile">Tipo de acesso
+          <select id="register-profile" name="profile" required>
+            <option value="ALUNO" selected>Aluno</option>
+            <option value="PROFESSOR">Professor</option>
+            <option value="COORDENADOR">Coordenador</option>
+            <option value="ATENDENTE">Administrativo</option>
+          </select>
+        </label>
+        <label id="invite-code-field" for="register-invite-code" hidden>Código de convite
+          <input id="register-invite-code" name="inviteCode" type="password" autocomplete="off" disabled>
+          <small class="form-help">Obrigatório para criar contas de professor, coordenador ou administrativo.</small>
+        </label>
+        <label for="register-password">Senha
+          <input id="register-password" name="password" type="password" autocomplete="new-password" minlength="8" aria-describedby="password-help" required>
+          <small id="password-help" class="form-help">Use pelo menos 8 caracteres.</small>
+        </label>
+        <label for="register-password-confirmation">Confirme a senha
+          <input id="register-password-confirmation" name="passwordConfirmation" type="password" autocomplete="new-password" minlength="8" required>
+        </label>
+        <button id="register-button" class="button" type="submit">Criar conta</button>
       </form>
+      <p class="form-footer">Já tem uma conta? <a id="enrollment-link" class="text-link" href="#matricula-form">Entre e envie os documentos da matrícula</a></p>
     </section>
 
     <section id="dashboard" class="card" hidden>
       <div class="section-heading">
-        <div><p class="eyebrow">Área autenticada</p><h2 id="welcome">Painel</h2></div>
-        <button id="logout-button" class="button secondary" type="button">Sair</button>
+        <div>
+          <p class="eyebrow">Área autenticada</p>
+          <h2 id="welcome">Painel do aluno</h2>
+          <p id="dashboard-email" class="form-intro"></p>
+        </div>
+        <div class="dashboard-actions">
+          <button id="logout-button" class="button secondary" type="button">Sair</button>
+        </div>
+      </div>
+      <nav id="dashboard-navigation" class="dashboard-navigation" aria-label="Navegação do painel" hidden>
+        <div id="student-navigation" class="dashboard-navigation-group" hidden>
+          <p class="eyebrow">Acessos rápidos</p>
+          <div class="dashboard-links">
+            <a class="button secondary" href="#matriculas-section">Acompanhar matrícula</a>
+            <a class="button secondary" href="#provas-section">Ver provas</a>
+          </div>
+        </div>
+        <div id="staff-navigation" class="dashboard-navigation-group" hidden>
+          <p class="eyebrow">Área da equipe</p>
+          <a id="staff-dashboard-link" class="button" href="#" hidden></a>
+        </div>
+      </nav>
+      <div id="student-summary" class="summary-grid" hidden>
+        <article class="summary-card">
+          <p class="eyebrow">Matrículas</p>
+          <strong id="matricula-summary">0 solicitações</strong>
+        </article>
+        <article class="summary-card">
+          <p class="eyebrow">Atividades</p>
+          <strong id="exam-summary">0 provas abertas</strong>
+        </article>
       </div>
       <div id="matriculas-section">
-        <h3>Solicitações de matrícula</h3>
+        <h3>Validação da matrícula</h3>
+        <p class="form-intro">Envie seus dados e documentos para solicitar a validação. São aceitos PDF, PNG, JPG ou JPEG, com até 10 MB por arquivo.</p>
         <ul id="matriculas-list" class="data-list"></ul>
         <form id="matricula-form" class="form-grid" enctype="multipart/form-data">
-          <label>CPF<input name="cpf" inputmode="numeric" required></label>
-          <label>Endereço<input name="endereco" required></label>
-          <label>CEP<input name="cep" required></label>
-          <label>ID do curso<input name="cursoId" type="number" min="1" required></label>
-          <label>Documento de identidade<input name="documentoIdentidade" type="file" accept=".pdf,.png,.jpg,.jpeg" required></label>
-          <label>Histórico escolar<input name="historicoEscolar" type="file" accept=".pdf,.png,.jpg,.jpeg" required></label>
-          <button class="button" type="submit">Enviar solicitação</button>
+          <label for="matricula-cpf">CPF
+            <input id="matricula-cpf" name="cpf" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00" required>
+          </label>
+          <label for="matricula-endereco">Endereço
+            <input id="matricula-endereco" name="endereco" autocomplete="street-address" required>
+          </label>
+          <label for="matricula-cep">CEP
+            <input id="matricula-cep" name="cep" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" required>
+          </label>
+          <label for="matricula-curso">ID do curso
+            <input id="matricula-curso" name="cursoId" type="number" min="1" required>
+            <small class="form-help">Use o identificador informado pela instituição.</small>
+          </label>
+          <label for="matricula-identidade">Documento de identidade
+            <input id="matricula-identidade" name="documentoIdentidade" type="file" accept=".pdf,.png,.jpg,.jpeg" aria-describedby="upload-help" required>
+          </label>
+          <label for="matricula-historico">Histórico escolar
+            <input id="matricula-historico" name="historicoEscolar" type="file" accept=".pdf,.png,.jpg,.jpeg" aria-describedby="upload-help" required>
+          </label>
+          <small id="upload-help" class="form-help form-help-wide">Anexe arquivos legíveis. Formatos aceitos: PDF, PNG, JPG ou JPEG; limite de 10 MB por documento.</small>
+          <button id="matricula-submit" class="button" type="submit">Enviar documentos para validação</button>
         </form>
       </div>
       <div id="provas-section">

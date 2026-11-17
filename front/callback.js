@@ -1,4 +1,4 @@
-const API = "http://localhost:8080";
+const API = `${location.protocol}//${location.hostname}:8080`;
 const message = document.querySelector("#callback-message");
 
 async function completeLogin() {
@@ -14,7 +14,7 @@ async function completeLogin() {
     grant_type: "authorization_code",
     client_id: "uniconecta-web",
     code: params.get("code"),
-    redirect_uri: "http://localhost:5500/callback.html",
+    redirect_uri: new URL("callback.html", location.href).href,
     code_verifier: verifier
   });
   const response = await fetch(`${API}/oauth2/token`, {
@@ -27,7 +27,7 @@ async function completeLogin() {
   sessionStorage.setItem("access_token", token.access_token);
   sessionStorage.removeItem("oauth_state");
   sessionStorage.removeItem("pkce_verifier");
-  location.replace("index.html");
+  location.replace(new URL("index.html", location.href).href);
 }
 
 completeLogin().catch(error => {

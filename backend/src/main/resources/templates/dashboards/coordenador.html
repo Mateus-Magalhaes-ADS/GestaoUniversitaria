@@ -24,6 +24,13 @@
         <div th:if="${mensagemSucesso}" class="alert alert-success" role="alert" th:text="${mensagemSucesso}"></div>
         <div th:if="${mensagemErro}" class="alert alert-danger" role="alert" th:text="${mensagemErro}"></div>
         <div class="row mt-4 g-3">
+            <div class="col-md-4">
+                <div class="card h-100 p-3 shadow-sm">
+                    <h5>Total de matrículas</h5>
+                    <p id="total-matriculas" class="display-6 fw-bold mb-2" th:text="${totalMatriculas}">0</p>
+                    <a href="#solicitacoes-matricula" class="btn btn-outline-primary align-self-start">Consultar solicitações</a>
+                </div>
+            </div>
             <div class="col-md-4"><div class="card p-3 shadow-sm"><h5>Grade Curricular</h5></div></div>
             <div class="col-md-4"><div class="card p-3 shadow-sm"><h5>Alocação de Professores</h5></div></div>
             <div class="col-md-4"><div class="card p-3 shadow-sm"><h5>Relatórios Acadêmicos</h5></div></div>
@@ -32,7 +39,9 @@
             <a th:href="@{/prova/coordenacao/nova}" class="btn btn-success me-2">Criar prova para os alunos</a>
             <a th:href="@{/prova/coordenacao}" class="btn btn-dark">Provas para publicar</a>
         </div>
-        <div th:replace="~{dashboards/fragmentos/matriculas :: lista('Solicitações de matrícula', ${matriculas})}"></div>
+        <div id="solicitacoes-matricula">
+            <div th:replace="~{dashboards/fragmentos/matriculas :: lista('Solicitações de matrícula', ${matriculas})}"></div>
+        </div>
     </div>
 </body>
 </html>

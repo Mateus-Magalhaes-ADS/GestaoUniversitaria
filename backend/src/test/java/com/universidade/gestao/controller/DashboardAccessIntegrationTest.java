@@ -51,6 +51,7 @@ class DashboardAccessIntegrationTest {
         registry.add("APP_BOOTSTRAP_STAFF_ROLE", () -> "COORDENADOR");
         registry.add("APP_PROFESSOR_REGISTRATION_CODE", () -> "convite-professor-teste");
         registry.add("APP_COORDINATOR_REGISTRATION_CODE", () -> "convite-coordenador-teste");
+        registry.add("APP_ADMINISTRATIVE_REGISTRATION_CODE", () -> "convite-administrativo-teste");
     }
 
     @Autowired
@@ -110,6 +111,42 @@ class DashboardAccessIntegrationTest {
 
     @Test
     @SuppressWarnings("null")
+    void administrativeRegistrationRequiresInviteAndOpensItsDashboard() throws Exception {
+        String email = "administrativo-" + UUID.randomUUID() + "@example.com";
+        String password = "senha-segura-de-teste";
+
+        mockMvc.perform(post("/registrar").with(csrf())
+                        .param("nome", "Equipe Administrativa")
+                        .param("email", email)
+                        .param("senha", password)
+                        .param("perfil", "ATENDENTE"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/registrar?erro=convite"));
+
+        mockMvc.perform(post("/registrar").with(csrf())
+                        .param("nome", "Equipe Administrativa")
+                        .param("email", email)
+                        .param("senha", password)
+                        .param("perfil", "ATENDENTE")
+                        .param("codigoConvite", "convite-administrativo-teste"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?sucesso"));
+        assertEquals(Role.ATENDENTE, usuarioRepository.findByEmail(email).orElseThrow().getPerfil());
+
+        MvcResult loginResult = mockMvc.perform(post("/login").with(csrf())
+                        .param("username", email)
+                        .param("password", password))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/atendente/dashboard"))
+                .andReturn();
+        MockHttpSession session = (MockHttpSession) loginResult.getRequest().getSession(false);
+        assertNotNull(session);
+        mockMvc.perform(get("/atendente/dashboard").session(session))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @SuppressWarnings("null")
     void studentCanSeeOnlyOwnEnrollmentAndCannotOpenStaffDashboard() throws Exception {
         String email = "aluno-" + UUID.randomUUID() + "@example.com";
         String password = "senha-segura-de-teste";
@@ -118,6 +155,7 @@ class DashboardAccessIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Professor")))
                 .andExpect(content().string(containsString("Coordenador")))
+                .andExpect(content().string(containsString("Administrativo")))
                 .andExpect(content().string(containsString("codigoConvite")));
 
         String rejeitadoEmail = "sem-convite-" + UUID.randomUUID() + "@example.com";
@@ -248,6 +286,10 @@ class DashboardAccessIntegrationTest {
 
         mockMvc.perform(get("/coordenador/dashboard").session(staffSession))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("12345678900")));
+                .andExpect(content().string(containsString("12345678900")))
+                .andExpect(content().string(containsString("Total de matrículas")))
+                .andExpect(content().string(containsString("id=\"total-matriculas\"")))
+                .andExpect(content().string(containsString(">" + matriculaRepository.count() + "</p>")))
+                .andExpect(content().string(containsString("href=\"#solicitacoes-matricula\"")));
     }
 }

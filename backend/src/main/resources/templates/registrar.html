@@ -47,6 +47,7 @@
                     <option value="ALUNO" th:selected="${perfilInformado == null or perfilInformado == 'ALUNO'}">Aluno</option>
                     <option value="PROFESSOR" th:selected="${perfilInformado == 'PROFESSOR'}">Professor</option>
                     <option value="COORDENADOR" th:selected="${perfilInformado == 'COORDENADOR'}">Coordenador</option>
+                    <option value="ATENDENTE" th:selected="${perfilInformado == 'ATENDENTE'}">Administrativo</option>
                 </select>
             </div>
             
@@ -54,7 +55,7 @@
                 <label for="codigoConvite" class="form-label">Código de convite</label>
                 <input type="password" id="codigoConvite" name="codigoConvite" class="form-control"
                        autocomplete="off" aria-describedby="ajuda-convite" />
-                <div id="ajuda-convite" class="form-text">Necessário para criar contas de professor ou coordenador.</div>
+                <div id="ajuda-convite" class="form-text">Necessário para criar contas de professor, coordenador ou administrativo.</div>
             </div>
             
             <button type="submit" class="btn btn-success w-100">Registar</button>
