@@ -16,7 +16,7 @@ Projeto Integrador acadêmico de TADS/TSI — SENAC EAD. O UniConecta é um MVP 
 - [Configuração](#configuração)
 - [Testes automatizados](#testes-automatizados)
 - [Segurança e limitações do MVP](#segurança-e-limitações-do-mvp)
-- [Links úteis].(links-uteis).
+- [Links úteis].(#links-úteis).
 
 ## Funcionalidades do MVP
 
