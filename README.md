@@ -50,6 +50,7 @@ Projeto Integrador acadêmico de TADS/TSI — SENAC EAD. O UniConecta é um MVP 
 │   ├── src/main/resources/
 │   ├── src/test/           # Testes de integração
 │   └── pom.xml
+|
 ├── front/
 │   ├── index.html
 │   ├── callback.html
