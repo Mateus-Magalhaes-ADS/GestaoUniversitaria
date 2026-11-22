@@ -16,6 +16,7 @@ Projeto Integrador acadêmico de TADS/TSI — SENAC EAD. O UniConecta é um MVP 
 - [Configuração](#configuração)
 - [Testes automatizados](#testes-automatizados)
 - [Segurança e limitações do MVP](#segurança-e-limitações-do-mvp)
+- [Links úteis](#links-úteis)
 
 ## Funcionalidades do MVP
 
@@ -49,6 +50,7 @@ Projeto Integrador acadêmico de TADS/TSI — SENAC EAD. O UniConecta é um MVP 
 │   ├── src/main/resources/
 │   ├── src/test/           # Testes de integração
 │   └── pom.xml
+|
 ├── front/
 │   ├── index.html
 │   ├── callback.html
@@ -57,6 +59,37 @@ Projeto Integrador acadêmico de TADS/TSI — SENAC EAD. O UniConecta é um MVP 
 │   └── styles.css
 ├── compose.yaml
 └── Dockerfile
+|
+├── back-matricula
+│   ├── src/main/java/br/com/uniconecta
+│   │   ├── aluno/
+│   │   ├── auth/
+│   │   ├── common/
+│   │   ├── curso/
+│   │   ├── matricula/
+│   │   ├── pagamento/
+│   │   ├── security/
+│   │   └── UniconectaApiApplication.java
+│   ├── src/test/java/br/com/uniconecta/pagamento/gateway/
+|
+├── front-matricula
+|   ├── public/
+|   ├── src/pages
+│   │   └── Cursos.jsx
+│   │   └── Inicio.jsx
+│   │   └── Login.jsc
+│   │   └── MatriculaConfirmada.jsx
+│   │   └── MatriculaPasso1.jsx
+│   │   └── PagamentoBoleto.jsx
+│   │   └── PagamentoCartao.jsx
+│   │   └── PagamentoConfirmado.jsx
+│   │   └── PagamentoPix.jsx
+│   │   └── Perfil
+│   │   └── StatusBoleto
+│   └── index.html
+│   └── package-lock.json
+│   └── package.json
+│   └── vite.config.js
 ```
 
 ## Requisitos
@@ -251,6 +284,10 @@ mvn -f backend\pom.xml test
 - O armazenamento JSON criptografado anterior foi substituído por PostgreSQL. Não há migração automática dos dados locais `data/universidade.json.enc` nem de registros H2 antigos.
 - A aplicação possui interface/API MVC anterior junto da nova API durante a transição; o frontend separado usa os endpoints `/api`.
 
+## Links úteis
+
+- Prototipação Figma: https://www.figma.com/design/94zl9MrdEEa9QLv9dkR2kf/UniConecta?node-id=2213-462&t=9TNWO8rNPHNzLm3P-1
+- Vídeo Youtube: XXXX
 ---
 
 Projeto acadêmico desenvolvido para fins educacionais.
