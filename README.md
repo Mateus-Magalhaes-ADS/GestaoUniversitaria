@@ -58,6 +58,37 @@ Projeto Integrador acadêmico de TADS/TSI — SENAC EAD. O UniConecta é um MVP 
 │   └── styles.css
 ├── compose.yaml
 └── Dockerfile
+|
+├── back-matricula
+│   ├── src/main/java/br/com/uniconecta
+│   │   ├── aluno/
+│   │   ├── auth/
+│   │   ├── common/
+│   │   ├── curso/
+│   │   ├── matricula/
+│   │   ├── pagamento/
+│   │   ├── security/
+│   │   └── UniconectaApiApplication.java
+│   ├── src/test/java/br/com/uniconecta/pagamento/gateway/
+|
+├── front-matricula
+|   ├── public/
+|   ├── src/pages
+│   │   └── Cursos.jsx
+│   │   └── Inicio.jsx
+│   │   └── Login.jsc
+│   │   └── MatriculaConfirmada.jsx
+│   │   └── MatriculaPasso1.jsx
+│   │   └── PagamentoBoleto.jsx
+│   │   └── PagamentoCartao.jsx
+│   │   └── PagamentoConfirmado.jsx
+│   │   └── PagamentoPix.jsx
+│   │   └── Perfil
+│   │   └── StatusBoleto
+│   └── index.html
+│   └── package-lock.json
+│   └── package.json
+│   └── vite.config.js
 ```
 
 ## Requisitos
