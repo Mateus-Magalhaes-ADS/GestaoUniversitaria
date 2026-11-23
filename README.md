@@ -31,6 +31,7 @@ Projeto Integrador acadêmico de TADS/TSI — SENAC EAD. O UniConecta é um MVP 
 ## Tecnologias
 
 - Java 25, Spring Boot 3.5.16 e Maven.
+- React 18.3.
 - Spring MVC, Spring Security, Spring Data JPA e Spring Authorization Server.
 - PostgreSQL 17.
 - Frontend HTML, CSS e JavaScript sem framework.
