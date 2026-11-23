@@ -58,7 +58,12 @@ public class MatriculaController {
     @PostMapping("/enviar")
     public String processarMatricula(
             @RequestParam("cpf") String cpf,
-            @RequestParam("endereco") String endereco,
+            @RequestParam(value = "endereco", required = false) String endereco,
+            @RequestParam(value = "rua", required = false) String rua,
+            @RequestParam(value = "numero", required = false) String numero,
+            @RequestParam(value = "bairro", required = false) String bairro,
+            @RequestParam(value = "cidade", required = false) String cidade,
+            @RequestParam(value = "estado", required = false) String estado,
             @RequestParam("cep") String cep,
             @RequestParam("cursoId") Long cursoId,
             @RequestParam("documentoIdentidade") MultipartFile documentoIdentidade,
@@ -80,11 +85,12 @@ public class MatriculaController {
         }
 
         try {
+            String enderecoCompleto = montarEndereco(endereco, rua, numero, bairro, cidade, estado);
             Usuario aluno = usuarioRepository.findByEmail(user.getUsername())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
 
             Matricula matricula = new Matricula(aluno.getNome(), aluno.getEmail(), cpfLimpo, cursoId);
-            matricula.setEndereco(endereco.trim());
+            matricula.setEndereco(enderecoCompleto);
             matricula.setCep(cep.trim());
 
             armazenarDocumento(documentoIdentidade, true, matricula);
@@ -148,6 +154,27 @@ public class MatriculaController {
         headers.setContentLength(content.length);
 
         return new ResponseEntity<>(content, headers, HttpStatus.OK);
+    }
+
+    private String montarEndereco(
+            String endereco,
+            String rua,
+            String numero,
+            String bairro,
+            String cidade,
+            String estado) {
+        if (endereco != null && !endereco.isBlank()) {
+            return endereco.trim();
+        }
+        if (rua == null || rua.isBlank()
+                || numero == null || numero.isBlank()
+                || bairro == null || bairro.isBlank()
+                || cidade == null || cidade.isBlank()
+                || estado == null || estado.isBlank()) {
+            throw new IllegalArgumentException("Preencha todos os campos do endereço.");
+        }
+        return "%s, %s, %s, %s - %s".formatted(
+                rua.trim(), numero.trim(), bairro.trim(), cidade.trim(), estado.trim().toUpperCase(Locale.ROOT));
     }
 
     private void armazenarDocumento(MultipartFile arquivo, boolean identidade, Matricula matricula) throws IOException {

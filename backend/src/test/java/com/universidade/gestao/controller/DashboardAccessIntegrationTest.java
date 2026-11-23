@@ -241,7 +241,11 @@ class DashboardAccessIntegrationTest {
                         .file(new MockMultipartFile("documentoIdentidade", "identidade.pdf", "application/pdf", identityBytes))
                         .file(new MockMultipartFile("historicoEscolar", "historico.pdf", "application/pdf", "historico".getBytes(StandardCharsets.UTF_8)))
                         .param("cpf", "12345678900")
-                        .param("endereco", "Rua de teste, 123")
+                        .param("rua", "Rua de teste")
+                        .param("numero", "123")
+                        .param("bairro", "Centro")
+                        .param("cidade", "São Paulo")
+                        .param("estado", "sp")
                         .param("cep", "01000-000")
                         .param("cursoId", "1")
                         .session(session)
@@ -251,7 +255,7 @@ class DashboardAccessIntegrationTest {
 
         Matricula matricula = matriculaRepository.findAllByEmail(email).get(0);
         assertEquals("Ana Souza", matricula.getNomeCompleto());
-        assertEquals("Rua de teste, 123", matricula.getEndereco());
+        assertEquals("Rua de teste, 123, Centro, São Paulo - SP", matricula.getEndereco());
         assertEquals("01000-000", matricula.getCep());
 
         // 4. Valida acesso às visões permitidas do aluno
