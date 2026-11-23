@@ -287,7 +287,7 @@ mvn -f backend\pom.xml test
 ## Links úteis
 
 - Prototipação Figma: https://www.figma.com/design/94zl9MrdEEa9QLv9dkR2kf/UniConecta?node-id=2213-462&t=9TNWO8rNPHNzLm3P-1
-- Vídeo Youtube: XXXX
+- Vídeo Youtube: https://youtu.be/QSVkQSujBN4
 ---
 
 Projeto acadêmico desenvolvido para fins educacionais.
